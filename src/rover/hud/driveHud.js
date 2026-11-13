@@ -1,5 +1,5 @@
 import './driveHud.css';
-import { TIME_WARP } from './rover.js';
+import { TIME_WARP } from '../physics.js';
 
 const nf = (d) => new Intl.NumberFormat('es', { minimumFractionDigits: d, maximumFractionDigits: d });
 

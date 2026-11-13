@@ -1,4 +1,4 @@
-import { PHOTOS } from '../cameras/photos.js';
+import { PHOTOS } from '@/data/photos.js';
 
 // Rocas reales que marcaron la misión de astrobiología de Perseverance en el cráter Jezero.
 // Fuentes: NASA/JPL (comunicados de prensa de 2021 a 2025), Nature (10 sep 2025) y Planetary Society.

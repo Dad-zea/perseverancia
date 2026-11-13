@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { simplex, fbm2 } from './noise.js';
+import { simplex, fbm2 } from '@/utils/noise.js';
 
 const SIZE = 900;
 const SEGMENTS = 360;

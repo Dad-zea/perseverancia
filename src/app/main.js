@@ -1,39 +1,29 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { createTerrain, heightAt } from './terrain.js';
-import { createRocks } from './rocks.js';
-import { createSky, HORIZON } from './sky.js';
-import { createMoons } from './moons.js';
-import { createDust } from './dust.js';
-import { createMissionControl } from './mission/panel.js';
-import { Rover } from './rover.js';
-import { Tracks } from './tracks.js';
-import { createDriveHud } from './driveHud.js';
-import * as ground from './ground.js';
-import { createCameraSpots } from './cameras/cameraSpots.js';
-import { createPhotoViewer } from './cameras/photoViewer.js';
-import { createScienceMission } from './science/scienceMission.js';
+import { ROVER_START, TARGET_LIFT, SUN_DIRECTION, FOG_DENSITY } from './config.js';
+import { startLoop } from './loop.js';
+import { createRenderer, createComposer, bindResize } from '@/core/renderer.js';
+import { createTerrain, heightAt } from '@/world/terrain.js';
+import { createRocks } from '@/world/rocks.js';
+import { createSky, HORIZON } from '@/world/sky.js';
+import { createMoons } from '@/world/moons.js';
+import { createDust } from '@/world/dust.js';
+import { createMissionControl } from '@/mission/panel.js';
+import { Rover } from '@/rover/physics.js';
+import { Tracks } from '@/rover/tracks.js';
+import { createDriveHud } from '@/rover/hud/driveHud.js';
+import * as ground from '@/world/ground.js';
+import { createCameraSpots } from '@/cameras/cameraSpots.js';
+import { createPhotoViewer } from '@/cameras/photoViewer.js';
+import { createScienceMission } from '@/science/scienceMission.js';
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
-document.body.appendChild(renderer.domElement);
+const renderer = createRenderer();
 
 const scene = new THREE.Scene();
 scene.background = HORIZON.clone();
-scene.fog = new THREE.FogExp2(HORIZON.clone(), 0.0042);
+scene.fog = new THREE.FogExp2(HORIZON.clone(), FOG_DENSITY);
 
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 3000);
-const ROVER_START = { x: 0, z: 10 };
-const TARGET_LIFT = 1.3; // la cámara mira al cuerpo del rover, no a sus ruedas
 const startY = heightAt(ROVER_START.x, ROVER_START.z);
 camera.position.set(ROVER_START.x + 2.5, startY + 3.4, ROVER_START.z + 9);
 
@@ -47,7 +37,7 @@ controls.minDistance = 4;
 controls.maxDistance = 60;
 
 // Sol de tarde: bajo sobre el horizonte, delante de la cámara (contraluz cinematográfico).
-const sunDir = new THREE.Vector3(-0.38, 0.13, -1).normalize();
+const sunDir = new THREE.Vector3(...SUN_DIRECTION).normalize();
 
 const sky = createSky(sunDir);
 scene.add(sky);
@@ -192,22 +182,11 @@ function frameRover(dt) {
 // Solo en desarrollo: acceso para pruebas automáticas (npm run check).
 if (import.meta.env.DEV) window.__percy = { rover, camera, controls, ground };
 
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-composer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.35, 0.7, 0.92));
-composer.addPass(new OutputPass());
+const composer = createComposer(renderer, scene, camera);
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  composer.setSize(window.innerWidth, window.innerHeight);
-  measurePanel();
-});
+bindResize({ renderer, camera, composer, onResize: measurePanel });
 
-const clock = new THREE.Clock();
-renderer.setAnimationLoop(() => {
-  const dt = Math.min(clock.getDelta(), 0.05);
+startLoop(renderer, (dt) => {
   if (rover.ready) {
     rover.update(dt);
     tracks.update(rover.trackPoints(), rover.heading);

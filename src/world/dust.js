@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { mulberry32 } from './noise.js';
+import { mulberry32 } from '@/utils/noise.js';
 
 function softDotTexture() {
   const c = document.createElement('canvas');

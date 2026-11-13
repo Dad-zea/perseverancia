@@ -1,5 +1,5 @@
 import './cameras.css';
-import { PHOTOS } from './photos.js';
+import { PHOTOS } from '@/data/photos.js';
 
 const STAY_MS = 8000; // cuánto se queda la foto antes de volver sola al juego
 const REVEAL_MS = 2600; // la foto llega línea a línea, como baja desde Marte

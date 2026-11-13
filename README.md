@@ -103,16 +103,15 @@ Abre <http://localhost:5173> y listo.
 
 ```
 src/
-  main.js          arma la escena y el ciclo del juego
-  terrain.js       dunas y colinas
-  rocks.js         rocas
-  sky.js           cielo marciano, con el halo azul del atardecer
-  rover.js         física de movilidad: dirección, patinaje, rocker-bogie
-  roverRig.js      separa el modelo 3D en piezas móviles
-  ground.js        rocas sólidas que el rover puede subir o no
+  app/             arranque, configuración y ciclo del juego
+  core/            renderer, postprocesado y rutas de assets
+  world/           dunas, colinas, rocas, cielo, lunas y polvo
+  rover/           física de movilidad, rig, brazo, huellas y HUD
   mission/         control de misión (patrón de Open MCT)
-  cameras/         cámaras de Percy, visor y fotos escogidas
+  cameras/         cámaras de Percy y visor de fotos
   science/         misión de astrobiología: rocas reales, instrumentos, muestras
+  data/            fotos y datos de la misión
+  utils/           ruido, Draco y utilidades compartidas
 scripts/check.mjs  prueba automática con capturas
 ```
 

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { rockGeometry } from './rocks.js';
-import { mulberry32 } from './noise.js';
+import { mulberry32 } from '@/utils/noise.js';
 
 // Hunde cuencos con borde elevado en la superficie (cráteres; el mayor imita a Stickney en Fobos).
 function addCraters(geo, seed, count) {

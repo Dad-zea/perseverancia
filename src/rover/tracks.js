@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { heightAt } from './terrain.js';
+import { heightAt } from '@/world/terrain.js';
 
 const MAX = 8000;
 const STEP = 0.3; // metros entre segmentos de huella

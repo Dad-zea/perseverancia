@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { MainThreadDRACOLoader } from './dracoMainThread.js';
-import { heightAt, duneAmount } from './terrain.js';
-import { groundAt, obstacleAt, rockHeightAt } from './ground.js';
-import { buildRig } from './roverRig.js';
-import { createRoverArm } from './roverArm.js';
+import { MainThreadDRACOLoader } from '@/utils/dracoMainThread.js';
+import { heightAt, duneAmount } from '@/world/terrain.js';
+import { groundAt, obstacleAt, rockHeightAt } from '@/world/ground.js';
+import { MODEL_URL, DRACO_DECODER_PATH } from '@/core/assets.js';
+import { buildRig } from './rig.js';
+import { createRoverArm } from './arm.js';
 
-const MODEL_URL = '/models/perseverance.glb';
 // Perseverance real: ~3 m de largo, 2,7 m de ancho, 2,2 m de alto. El modelo no es exactamente
 // proporcional, así que escalamos por el ancho entre ruedas (lo que toca el suelo y marca las huellas).
 const REAL_WHEEL_WIDTH = 2.7;
@@ -49,7 +49,7 @@ export class Rover {
   }
 
   async load(envMap, onProgress) {
-    const draco = new MainThreadDRACOLoader().setDecoderPath('/draco/');
+    const draco = new MainThreadDRACOLoader().setDecoderPath(DRACO_DECODER_PATH);
     const loader = new GLTFLoader().setDRACOLoader(draco);
     const gltf = await loader.loadAsync(MODEL_URL, onProgress);
     const model = gltf.scene;

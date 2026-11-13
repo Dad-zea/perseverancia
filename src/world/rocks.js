@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { fbm3, mulberry32 } from './noise.js';
+import { fbm3, mulberry32 } from '@/utils/noise.js';
 import { heightAt } from './terrain.js';
 import { registerRock, heightGrid } from './ground.js';
 

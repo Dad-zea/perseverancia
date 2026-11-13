@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { heightAt } from '../terrain.js';
-import { registerRock, heightGrid, obstacleAt } from '../ground.js';
-import { fbm3, mulberry32 } from '../noise.js';
+import { heightAt } from '@/world/terrain.js';
+import { registerRock, heightGrid, obstacleAt } from '@/world/ground.js';
+import { fbm3, mulberry32 } from '@/utils/noise.js';
 
 // Dónde buscar sitio para cada roca: en abanico delante del punto de partida, en el orden
 // en que el rover real las visitó (de 2021 a 2024), cada una un poco más lejos.
